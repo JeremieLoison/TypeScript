@@ -4158,6 +4158,18 @@ namespace ts {
         return unescapeLeadingUnderscores(symbol.escapedName);
     }
 
+    export function showSymbol(symbol: Symbol): string {
+        if (getCheckFlags(symbol) & CheckFlags.Late) {
+            for (const d of symbol.declarations) {
+                const name = getNameOfDeclaration(d);
+                if (name.kind === ts.SyntaxKind.ComputedPropertyName) {
+                    return getTextOfNode(name);
+                }
+            }
+        }
+        return symbolName(symbol);
+    }
+
     /**
      * Remove extra underscore from escaped identifier text content.
      * @deprecated Use `id.text` for the unescaped text.
